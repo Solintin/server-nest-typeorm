@@ -16,12 +16,12 @@ export class QuizService {
   }
 
   async findAll() {
-    const quizes = await this.quizRepository.find();
+    const quizes = await this.quizRepository.find({ relations: ["questions"] });
     return quizes;
   }
 
   findOne(id: string) {
-    return this.quizRepository.findOne({ where: { id } });
+    return this.quizRepository.findOne({ where: { id }, relations: ["questions"] });
   }
 
   update(id: string, updateQuizDto: UpdateQuizDto) {

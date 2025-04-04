@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, Length } from "class-validator";
+import { IsString, IsNotEmpty, Length, IsUUID } from "class-validator";
 
 export class CreateQuestionDto {
     @IsNotEmpty({ message: "Question is required" })
@@ -9,4 +9,9 @@ export class CreateQuestionDto {
     @IsNotEmpty({ message: "Answer is required" })
     @IsString()
     answer: string;
+
+    @IsNotEmpty({ message: "Quiz ID is required" })
+    @IsString()
+    @IsUUID()
+    quizId: string;
 }
