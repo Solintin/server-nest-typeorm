@@ -1,11 +1,11 @@
-import { IsNotEmpty, IsString, Length } from "class-validator";
+import { IsNotEmpty, IsString, Length } from 'class-validator';
 
 export class CreateQuizDto {
   @IsString({
-    message: "Title must be a string",
+    message: 'Title must be a string',
   })
   @Length(3, 255, {
-    message: "Title must be between 3 and 255 characters",
+    message: 'Title must be between 3 and 255 characters',
   })
   @IsNotEmpty()
   title: string;
@@ -13,7 +13,4 @@ export class CreateQuizDto {
   @IsString()
   @IsNotEmpty()
   description: string;
-
-
- 
 }

@@ -1,26 +1,40 @@
-import { Quiz } from "src/quiz/entities/quiz.entity";
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, UpdateDateColumn, CreateDateColumn, ManyToOne } from "typeorm";
+import { Quiz } from 'src/quiz/entities/quiz.entity';
+import { Tag } from 'src/tag/entities/tag.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  UpdateDateColumn,
+  CreateDateColumn,
+  ManyToOne,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
 
-@Entity("questions")
+@Entity('questions')
 export class Question extends BaseEntity {
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column()
-    question: string;
+  @Column()
+  question: string;
 
-    @Column()
-    answer: string;
+  @Column()
+  answer: string;
 
-    @CreateDateColumn()
-    createdAt: Date;
+  @CreateDateColumn()
+  createdAt: Date;
 
-    @UpdateDateColumn()
-    updatedAt: Date;
+  @UpdateDateColumn()
+  updatedAt: Date;
 
-    @ManyToOne(() => Quiz, quiz => quiz.questions, {
-        onDelete: "CASCADE"
-    })
-    quiz: Quiz;
+  @ManyToOne(() => Quiz, (quiz) => quiz.questions, {
+    onDelete: 'CASCADE',
+  })
+  quiz: Quiz;
 
+  @ManyToMany(() => Tag, (t) => t.questions)
+  @JoinTable()
+  tags: Tag[];
 }
