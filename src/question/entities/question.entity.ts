@@ -18,7 +18,9 @@ export class Question extends BaseEntity {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @ManyToOne(() => Quiz, quiz => quiz.questions)
+    @ManyToOne(() => Quiz, quiz => quiz.questions, {
+        onDelete: "CASCADE"
+    })
     quiz: Quiz;
 
 }

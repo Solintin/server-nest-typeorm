@@ -6,6 +6,7 @@ import { typeOrmConfig } from './config/typeorm.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { QuestionModule } from './question/question.module';
+import { QuizSettingsModule } from './quiz-settings/quiz-settings.module';
 
 @Module({
   imports: [QuizModule,
@@ -16,7 +17,7 @@ import { QuestionModule } from './question/question.module';
       useFactory: (configService: ConfigService) => ({
         ...typeOrmConfig
       })
-    }), QuestionModule
+    }), QuestionModule, QuizSettingsModule
   ],
   controllers: [AppController],
   providers: [AppService],

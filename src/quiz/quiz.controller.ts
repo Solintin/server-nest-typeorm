@@ -26,6 +26,10 @@ export class QuizController {
   findOne(@Param('id') id: string) {
     return this.quizService.findOne(id);
   }
+  @Get(':id/questions')
+  findOneQuizQuestion(@Param('id') id: string) {
+    return this.quizService.findOneQuizQuestion(id);
+  }
 
   @Patch(':id')
   @UsePipes(ValidationPipe)

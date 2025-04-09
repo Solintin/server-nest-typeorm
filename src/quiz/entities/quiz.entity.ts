@@ -18,6 +18,6 @@ export class Quiz extends BaseEntity {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @OneToMany(() => Question, question => question.quiz)
+    @OneToMany(() => Question, question => question.quiz, { cascade: true })
     questions: Question[];
 }
