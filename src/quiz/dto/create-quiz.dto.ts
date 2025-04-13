@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, Length } from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID, Length } from 'class-validator';
 
 export class CreateQuizDto {
   @IsString({
@@ -13,4 +13,8 @@ export class CreateQuizDto {
   @IsString()
   @IsNotEmpty()
   description: string;
+
+  @IsString()
+  @IsUUID()
+  settingsId?: string;
 }

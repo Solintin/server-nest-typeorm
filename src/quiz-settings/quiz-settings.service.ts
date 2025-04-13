@@ -1,26 +1,52 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Quiz } from 'src/quiz/entities/quiz.entity';
+import { Repository } from 'typeorm';
 import { CreateQuizSettingDto } from './dto/create-quiz-setting.dto';
 import { UpdateQuizSettingDto } from './dto/update-quiz-setting.dto';
+import { QuizSetting } from './entities/quiz-setting.entity';
 
 @Injectable()
 export class QuizSettingsService {
-  create(createQuizSettingDto: CreateQuizSettingDto) {
-    return 'This action adds a new quizSetting';
+  constructor(
+    @InjectRepository(QuizSetting)
+    private readonly quizSettingRepo: Repository<QuizSetting>,
+    @InjectRepository(Quiz)
+    private readonly quizRepo: Repository<Quiz>,
+  ) {}
+  async create(createQuizSettingDto: CreateQuizSettingDto) {
+    const getQuiz = await this.quizRepo.findOneBy({
+      id: createQuizSettingDto.quizId,
+    });
+    const quizSetting = this.quizSettingRepo.create({
+      ...createQuizSettingDto,
+    });
+    if (getQuiz) {
+      quizSetting.quiz = getQuiz;
+    }
+    return await this.quizSettingRepo.save(quizSetting);
   }
 
-  findAll() {
-    return `This action returns all quizSettings`;
+  async findAll() {
+    return await this.quizSettingRepo.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} quizSetting`;
+  async findOne(id: string) {
+    return this.quizSettingRepo.findOne({
+      where: {
+        id,
+      },
+    });
   }
 
-  update(id: number, updateQuizSettingDto: UpdateQuizSettingDto) {
-    return `This action updates a #${id} quizSetting`;
+  async update(id: string, updateQuizSettingDto: UpdateQuizSettingDto) {
+    return await this.quizSettingRepo.update(
+      { id },
+      { ...updateQuizSettingDto },
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} quizSetting`;
+  async remove(id: string) {
+    return await this.quizSettingRepo.delete(id);
   }
 }

@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Quiz } from './entities/quiz.entity';
 // import { QuestionModule } from 'src/question/question.module';
 import { Question } from 'src/question/entities/question.entity';
+import { QuizSetting } from 'src/quiz-settings/entities/quiz-setting.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Quiz, Question])],
+  imports: [TypeOrmModule.forFeature([Quiz, Question, QuizSetting])],
   controllers: [QuizController],
   providers: [QuizService],
   exports: [QuizService],
