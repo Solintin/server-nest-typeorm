@@ -33,7 +33,7 @@ export class QuizService {
 
   async findAll() {
     const quizzes = await this.quizRepository.find({
-      relations: ['questions'],
+      relations: ['questions', 'settings'],
     });
     return quizzes;
   }
@@ -51,7 +51,15 @@ export class QuizService {
   }
 
   async update(id: string, updateQuizDto: UpdateQuizDto) {
-    return await this.quizRepository.update(id, updateQuizDto);
+    const quizSettings = await this.quizSettingsRepo.findOneBy({
+      id: updateQuizDto.settingsId,
+    });
+
+    delete updateQuizDto.settingsId;
+    return await this.quizRepository.update(id, {
+      ...updateQuizDto,
+      ...(quizSettings ? { settings: quizSettings } : {}),
+    });
   }
 
   async remove(id: string) {

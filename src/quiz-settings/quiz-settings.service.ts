@@ -15,15 +15,19 @@ export class QuizSettingsService {
     private readonly quizRepo: Repository<Quiz>,
   ) {}
   async create(createQuizSettingDto: CreateQuizSettingDto) {
-    const getQuiz = await this.quizRepo.findOneBy({
-      id: createQuizSettingDto.quizId,
-    });
     const quizSetting = this.quizSettingRepo.create({
       ...createQuizSettingDto,
     });
-    if (getQuiz) {
-      quizSetting.quiz = getQuiz;
+
+    if (createQuizSettingDto?.quizId) {
+      const getQuiz = await this.quizRepo.findOneBy({
+        id: createQuizSettingDto.quizId,
+      });
+      if (getQuiz) {
+        quizSetting.quiz = getQuiz;
+      }
     }
+
     return await this.quizSettingRepo.save(quizSetting);
   }
 
@@ -36,6 +40,7 @@ export class QuizSettingsService {
       where: {
         id,
       },
+      relations: ['quiz.questions'],
     });
   }
 
