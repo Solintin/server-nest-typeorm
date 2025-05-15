@@ -17,7 +17,7 @@ export class Question extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({})
   question: string;
 
   @Column()
@@ -36,5 +36,5 @@ export class Question extends BaseEntity {
 
   @ManyToMany(() => Tag, (t) => t.questions)
   @JoinTable()
-  tags: Tag[];
+  tags?: Tag[];
 }

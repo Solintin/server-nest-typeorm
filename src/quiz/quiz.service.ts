@@ -65,4 +65,26 @@ export class QuizService {
   async remove(id: string) {
     return await this.quizRepository.delete(id);
   }
+
+  async getQuizzesWithMinQuestions(minQ: number): Promise<Quiz[]> {
+    return this.quizRepository
+      .createQueryBuilder('quiz')
+      .leftJoin('quiz.questions', 'questions')
+      .groupBy('quiz.id')
+      .having('COUNT(questions.id) >= :minQ', { minQ })
+      .getMany();
+  }
+  async getQuizStatistics(): Promise<any[]> {
+    return this.quizRepository
+      .createQueryBuilder('quiz')
+      .leftJoin('quiz.settings', 'settings')
+      .leftJoin('quiz.questions', 'questions')
+      .select('quiz.id', 'quizId')
+      .addSelect('quiz.title', 'quizTitle')
+      .addSelect('settings.timeLimit', 'settingLimitCount')
+      .addSelect('COUNT(questions.id)', 'questionCount')
+      .groupBy('quiz.id')
+      .addGroupBy('settings.timeLimit')
+      .getRawMany();
+  }
 }

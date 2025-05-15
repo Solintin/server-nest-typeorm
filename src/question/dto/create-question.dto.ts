@@ -1,28 +1,19 @@
-import {
-  IsString,
-  IsNotEmpty,
-  Length,
-  IsUUID,
-  IsArray,
-  ArrayNotEmpty,
-} from 'class-validator';
-
+import Joi from 'src/utils/validation/validation.custom';
 export class CreateQuestionDto {
-  @IsNotEmpty({ message: 'Question is required' })
-  @IsString()
-  @Length(1, 255, { message: 'Question must be between 1 and 255 characters' })
   question: string;
-
-  @IsNotEmpty({ message: 'Answer is required' })
-  @IsString()
   answer: string;
-
-  @IsNotEmpty({ message: 'Quiz ID is required' })
-  @IsString()
-  @IsUUID()
   quizId: string;
-
-  @IsArray()
-  @IsUUID('all', { each: true })
-  tags: string[];
+  tags?: string[];
 }
+
+export const createQuestionSchema = Joi.object({
+  question: Joi.string().required().min(1).max(255),
+  answer: Joi.string().required(),
+  quizId: Joi.string().uuid().required(),
+  tags: Joi.array().items(Joi.string().uuid()).optional(),
+});
+
+export const updateQuestionSchema = createQuestionSchema.fork(
+  ['question', 'answer', 'quizId', 'tags'],
+  (schema) => schema.optional(),
+);

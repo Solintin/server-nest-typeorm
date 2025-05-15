@@ -1,11 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UsePipes,
+  ValidationPipe,
+  BadRequestException,
+  Query,
+} from '@nestjs/common';
 import { QuizService } from './quiz.service';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
 
 @Controller('quiz')
 export class QuizController {
-  constructor(private readonly quizService: QuizService) { }
+  constructor(private readonly quizService: QuizService) {}
 
   @Post()
   @UsePipes(ValidationPipe)
@@ -16,10 +28,18 @@ export class QuizController {
       throw new BadRequestException(error);
     }
   }
+  @Get('min-question')
+  findQuizzesWithMinQuestions(@Query('minQ') minQ: number) {
+    return this.quizService.getQuizzesWithMinQuestions(minQ);
+  }
 
   @Get()
   findAll() {
     return this.quizService.findAll();
+  }
+  @Get('stats')
+  findQuizStatistics() {
+    return this.quizService.getQuizStatistics();
   }
 
   @Get(':id')
