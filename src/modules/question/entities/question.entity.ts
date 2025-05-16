@@ -1,5 +1,5 @@
-import { Quiz } from 'src/quiz/entities/quiz.entity';
-import { Tag } from 'src/tag/entities/tag.entity';
+import { Quiz } from 'src/modules/quiz/entities/quiz.entity';
+import { Tag } from 'src/modules/tag/entities/tag.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,

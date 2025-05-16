@@ -6,8 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { QuestionService } from './question.service';
 import {

@@ -4,8 +4,8 @@ import { UpdateQuizDto } from './dto/update-quiz.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Quiz } from './entities/quiz.entity';
 import { Repository } from 'typeorm';
-import { Question } from 'src/question/entities/question.entity';
-import { QuizSetting } from 'src/quiz-settings/entities/quiz-setting.entity';
+import { Question } from 'src/modules/question/entities/question.entity';
+import { QuizSetting } from '../quiz-settings/entities/quiz-setting.entity';
 
 @Injectable()
 export class QuizService {

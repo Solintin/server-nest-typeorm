@@ -1,4 +1,5 @@
-import { Question } from 'src/question/entities/question.entity';
+import { Question } from 'src/modules/question/entities/question.entity';
+import { QuizSetting } from 'src/modules/quiz-settings/entities/quiz-setting.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -10,7 +11,6 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
-import { QuizSetting } from '../../quiz-settings/entities/quiz-setting.entity';
 
 @Entity('quizzes')
 export class Quiz extends BaseEntity {

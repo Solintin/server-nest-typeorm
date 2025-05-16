@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Question } from 'src/question/entities/question.entity';
+import { Question } from 'src/modules/question/entities/question.entity';
 
 @Entity('tags')
 export class Tag {

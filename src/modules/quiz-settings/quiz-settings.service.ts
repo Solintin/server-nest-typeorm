@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Quiz } from 'src/quiz/entities/quiz.entity';
+import { Quiz } from 'src/modules/quiz/entities/quiz.entity';
 import { Repository } from 'typeorm';
 import { CreateQuizSettingDto } from './dto/create-quiz-setting.dto';
 import { UpdateQuizSettingDto } from './dto/update-quiz-setting.dto';
