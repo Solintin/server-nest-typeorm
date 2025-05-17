@@ -9,11 +9,12 @@ import { QuestionModule } from './modules/question/question.module';
 import { QuizSettingsModule } from './modules/quiz-settings/quiz-settings.module';
 import { TagModule } from './modules/tag/tag.module';
 import { UserModule } from './modules/user/user.module';
+import configuration from './config/configuration';
 
 @Module({
   imports: [
     QuizModule,
-    ConfigModule.forRoot({ isGlobal: true }), // Loads environment variables
+    ConfigModule.forRoot({ isGlobal: true, load: [configuration] }), // Loads environment variables
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

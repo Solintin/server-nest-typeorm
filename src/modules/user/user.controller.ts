@@ -22,6 +22,11 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @Post('login')
+  async login(@Body() body: { email: string; password: string }) {
+    return this.userService.login(body.email, body.password);
+  }
+
   @Get()
   findAll() {
     return this.userService.findAll();
