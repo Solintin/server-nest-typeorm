@@ -6,11 +6,24 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Req,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto, CreateUserSchema } from './dto/create-user.dto';
+import {
+  CreateUserDto,
+  CreateUserSchema,
+  GetUserDTO,
+} from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JoiValidation } from 'src/utils/validation/validation.decorator';
+// import { ApiResponse, ApiExtraModels, getSchemaPath } from '@nestjs/swagger';
+import { User } from './entities/user.entity';
+import { JwtAuthGuard } from 'src/utils/validation/jwt.guard';
+import { PaginatedResponse } from 'src/utils/interface';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { AdminRoleGuard } from 'src/utils/validation/admin.guard';
 
 @Controller('user')
 export class UserController {
@@ -28,8 +41,11 @@ export class UserController {
   }
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  @ApiBearerAuth('access_token')
+  @PaginatedResponse(User)
+  @UseGuards(JwtAuthGuard, AdminRoleGuard)
+  findAll(@Query() dto: GetUserDTO) {
+    return this.userService.findAll(dto);
   }
 
   @Get(':id')

@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
+import { Brackets, Repository } from 'typeorm';
+import { CreateUserDto, GetUserDTO } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import {
@@ -10,6 +10,9 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { paginate } from 'nestjs-typeorm-paginate';
+// import { DataPaging } from 'src/utils/interface';
+
 @Injectable()
 export class UserService {
   constructor(
@@ -30,8 +33,73 @@ export class UserService {
     return user;
   }
 
-  async findAll(): Promise<User[]> {
-    return await this.userRepo.find();
+  async findAll(dto: GetUserDTO) {
+    // const users = await this.userRepo.find();
+    const { page, limit, sort, sortDirection, createdBefore, createdAfter, q } =
+      dto;
+
+    const query = this.userRepo.createQueryBuilder('user');
+    const _q = q?.toLowerCase();
+    // Date range filtering
+    if (createdBefore && createdAfter) {
+      query.andWhere('user.createdAt BETWEEN :after AND :before', {
+        after: createdAfter,
+        before: createdBefore,
+      });
+    } else if (createdBefore) {
+      query.andWhere('user.createdAt < :before', {
+        before: createdBefore,
+      });
+    } else if (createdAfter) {
+      query.andWhere('user.createdAt > :after', {
+        after: createdAfter,
+      });
+    }
+
+    // // Institution filtering
+    // if (institutionId) {
+    //   query.andWhere('user.institutionId = :institutionId', {
+    //     institutionId,
+    //   });
+    // }
+    // search filtering
+    if (_q) {
+      query.andWhere(
+        new Brackets((qb) =>
+          qb
+            .orWhere('LOWER(user.name) LIKE :searchTerm', {
+              searchTerm: `%${_q}%`,
+            })
+            .orWhere('LOWER(user.email) LIKE :searchTerm', {
+              searchTerm: `%${_q}%`,
+            })
+            .orWhere('LOWER(user.phoneNumber) LIKE :searchTerm', {
+              searchTerm: `%${_q}%`,
+            }),
+        ),
+      );
+    }
+    if (sort) {
+      query.orderBy(
+        `user.${sort}`,
+        sortDirection?.toUpperCase() as 'ASC' | 'DESC',
+      );
+    }
+
+    const d = await paginate(query, { page: page ?? 1, limit: limit ?? 5 });
+    const dataWithoutPassword = d.items.map(({ password, ...rest }) => rest);
+    return {
+      data: {
+        data: dataWithoutPassword,
+        paging: {
+          totalPage: d.meta.totalPages,
+          currentPage: d.meta.currentPage,
+          itemCount: d.meta.itemCount,
+          totalItems: d.meta.totalItems,
+        },
+      },
+      message: 'Successful',
+    };
   }
 
   async findOne(id: string) {
