@@ -52,6 +52,12 @@ export class User extends BaseEntity {
   })
   role?: UserRole;
 
+  @Column({ default: false })
+  @ApiProperty({
+    description: 'isVerified',
+  })
+  isVerified?: boolean;
+
   @CreateDateColumn()
   @ApiProperty({
     description: 'Timestamp when the user was created',

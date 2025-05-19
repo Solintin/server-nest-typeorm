@@ -1,9 +1,28 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { createBullBoard } from '@bull-board/api';
+import { ExpressAdapter } from '@bull-board/express';
+// import { Queue } from 'bullmq';
+// import * as express from 'express';
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
+
+import { Queue as NestQueue } from 'bullmq';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const serverAdapter = new ExpressAdapter();
+  serverAdapter.setBasePath('/admin/queues');
+  const mailQueue = new NestQueue('mail-queue', {
+    connection: { host: 'localhost', port: 6379 },
+  });
+
+  createBullBoard({
+    queues: [new BullMQAdapter(mailQueue)],
+    serverAdapter,
+  });
+  app.use('/admin/queues', serverAdapter.getRouter());
+
   app.enableCors();
 
   const config = new DocumentBuilder()

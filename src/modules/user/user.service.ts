@@ -11,6 +11,8 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { paginate } from 'nestjs-typeorm-paginate';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { UserEvent } from 'src/common/constant.event';
 // import { DataPaging } from 'src/utils/interface';
 
 @Injectable()
@@ -19,6 +21,7 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
     private jwtService: JwtService,
+    private eventEmitter: EventEmitter2,
   ) {}
   async create(
     createUserDto: CreateUserDto,
@@ -28,6 +31,7 @@ export class UserService {
       throw new BadRequestException('User already Exist');
     }
     const newUser = this.userRepo.create({ ...createUserDto });
+    this.eventEmitter.emit(UserEvent.SEND_WELCOME_MAIL, newUser);
     await newUser.save();
     const user = await this.login(newUser.email, createUserDto.password);
     return user;

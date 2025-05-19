@@ -43,7 +43,8 @@ export class UserController {
   @Get()
   @ApiBearerAuth('access_token')
   @PaginatedResponse(User)
-  @UseGuards(JwtAuthGuard, AdminRoleGuard)
+  // @UseGuards(JwtAuthGuard, AdminRoleGuard)
+  @UseGuards(JwtAuthGuard)
   findAll(@Query() dto: GetUserDTO) {
     return this.userService.findAll(dto);
   }

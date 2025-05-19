@@ -10,7 +10,13 @@ import { QuizSettingsModule } from './modules/quiz-settings/quiz-settings.module
 import { TagModule } from './modules/tag/tag.module';
 import { UserModule } from './modules/user/user.module';
 import configuration from './config/configuration';
-
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { MailService } from './modules/mail/mail.service';
+import { MailModule } from './modules/mail/mail.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { ScheduleModule } from '@nestjs/schedule';
+import { mailConfig } from './config/mail.config';
+import { QueueModule } from './modules/queue/queue.module';
 @Module({
   imports: [
     QuizModule,
@@ -26,8 +32,13 @@ import configuration from './config/configuration';
     QuizSettingsModule,
     TagModule,
     UserModule,
+    EventEmitterModule.forRoot(),
+    MailModule,
+    ScheduleModule.forRoot(),
+    MailerModule.forRoot({ ...mailConfig }),
+    QueueModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, MailService],
 })
 export class AppModule {}
